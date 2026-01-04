@@ -872,6 +872,198 @@
             color: var(--amber);
         }
 
+        /* Interactive Demo Styles */
+        .task-item.interactive {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .task-item.interactive:hover {
+            background: var(--surface-elevated);
+            border-color: var(--amber);
+        }
+
+        .task-item.interactive:active {
+            transform: scale(0.98);
+        }
+
+        .task-checkbox {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .task-item.interactive:hover .task-checkbox:not(.checked) {
+            border-color: var(--amber);
+        }
+
+        .task-checkbox.checking {
+            animation: checkBounce 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes checkBounce {
+            0% { transform: scale(1); }
+            30% { transform: scale(1.3); }
+            50% { transform: scale(0.9); }
+            70% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .task-item.completing {
+            animation: taskComplete 0.6s ease forwards;
+        }
+
+        @keyframes taskComplete {
+            0% { opacity: 1; transform: translateX(0); }
+            50% { opacity: 0.5; transform: translateX(10px); }
+            100% { opacity: 0.7; transform: translateX(0); }
+        }
+
+        .demo-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            border-top: 1px solid var(--border);
+            background: var(--surface-elevated);
+        }
+
+        .hint {
+            font-size: 0.75rem;
+            color: var(--text-subtle);
+        }
+
+        .reset-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .reset-btn:hover {
+            border-color: var(--amber);
+            color: var(--amber);
+        }
+
+        /* Terminal Interactive */
+        .terminal-body {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            min-height: 200px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .terminal-welcome {
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .terminal-line-interactive {
+            margin-bottom: 12px;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        .terminal-input-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 24px;
+            border-top: 1px solid var(--border);
+            background: var(--surface-elevated);
+        }
+
+        .terminal-input-container .prompt {
+            color: var(--emerald);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        #terminal-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        #terminal-input::placeholder {
+            color: var(--text-subtle);
+        }
+
+        .command-suggestions {
+            display: flex;
+            gap: 8px;
+            padding: 12px 24px;
+            border-top: 1px solid var(--border);
+            background: var(--noir);
+            flex-wrap: wrap;
+        }
+
+        .suggestion {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--amber);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .suggestion:hover {
+            background: var(--surface-elevated);
+            border-color: var(--amber);
+            transform: translateY(-2px);
+        }
+
+        .text-muted {
+            color: var(--text-muted);
+        }
+
+        .text-success {
+            color: var(--emerald);
+        }
+
+        .text-amber {
+            color: var(--amber);
+        }
+
+        /* Confetti Canvas */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* All tasks done celebration */
+        .celebration-message {
+            text-align: center;
+            padding: 40px 20px;
+            animation: celebratePulse 0.5s ease;
+        }
+
+        .celebration-message h3 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        @keyframes celebratePulse {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
         /* Responsive */
         @media (max-width: 1024px) {
             .hero-content {
@@ -1065,19 +1257,19 @@
     <section class="demo" id="demo">
         <div class="container">
             <div class="section-header">
-                <div class="section-label">Demo</div>
-                <h2 class="section-title">See it in action</h2>
-                <p class="section-subtitle">Real markdown files, real terminal commands, real productivity</p>
+                <div class="section-label">Interactive Demo</div>
+                <h2 class="section-title">Try it yourself</h2>
+                <p class="section-subtitle">Click tasks to complete them, or type commands in the terminal</p>
             </div>
 
             <div class="demo-grid">
-                <div class="demo-card">
+                <div class="demo-card" id="tasks-card">
                     <div class="demo-card-header">
                         <div class="demo-card-title">today.md</div>
-                        <div class="demo-card-meta">3 tasks remaining</div>
+                        <div class="demo-card-meta" id="tasks-remaining">3 tasks remaining</div>
                     </div>
-                    <div class="demo-card-body">
-                        <div class="task-item">
+                    <div class="demo-card-body" id="tasks-list">
+                        <div class="task-item interactive" data-task="api">
                             <div class="task-checkbox"></div>
                             <div class="task-content">
                                 <div class="task-title">Review API design docs</div>
@@ -1088,7 +1280,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="task-item">
+                        <div class="task-item interactive" data-task="auth">
                             <div class="task-checkbox"></div>
                             <div class="task-content">
                                 <div class="task-title">Fix authentication bug</div>
@@ -1099,7 +1291,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="task-item">
+                        <div class="task-item interactive" data-task="sync">
                             <div class="task-checkbox"></div>
                             <div class="task-content">
                                 <div class="task-title">Team sync call</div>
@@ -1109,7 +1301,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="task-item completed">
+                        <div class="task-item completed interactive" data-task="deploy">
                             <div class="task-checkbox checked"></div>
                             <div class="task-content">
                                 <div class="task-title">Deploy staging updates</div>
@@ -1119,35 +1311,40 @@
                             </div>
                         </div>
                     </div>
+                    <div class="demo-card-footer">
+                        <span class="hint">Click any task to toggle</span>
+                        <button class="reset-btn" onclick="resetTasks()">Reset</button>
+                    </div>
                 </div>
 
-                <div class="demo-card">
+                <div class="demo-card" id="terminal-card">
                     <div class="demo-card-header">
                         <div class="demo-card-title">Terminal</div>
-                        <div class="demo-card-meta">zsh</div>
+                        <div class="demo-card-meta">interactive</div>
                     </div>
-                    <div class="demo-card-body" style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;">
-                        <div style="margin-bottom: 20px;">
-                            <span style="color: var(--emerald);">$</span> <span style="color: var(--amber);">/add</span> <span style="color: var(--text-muted);">urgent: fix login timeout</span>
+                    <div class="demo-card-body terminal-body" id="terminal-output">
+                        <div class="terminal-welcome">
+                            <span class="text-muted">Welcome to Claude Tasks!</span><br>
+                            <span class="text-muted">Type a command below or click a suggestion.</span>
                         </div>
-                        <div style="color: var(--text); margin-bottom: 24px; padding-left: 16px; border-left: 2px solid var(--border);">
-                            Added to inbox:<br>
-                            <span style="color: var(--text-muted);">- [ ]</span> Fix login timeout issue
-                            <span class="task-tag project" style="font-size: 0.7rem;">@work</span>
-                            <span class="task-tag high" style="font-size: 0.7rem;">!high</span>
-                            <span class="task-tag time" style="font-size: 0.7rem;">~1h</span>
-                        </div>
-                        <div style="margin-bottom: 20px;">
-                            <span style="color: var(--emerald);">$</span> <span style="color: var(--amber);">/done</span> <span style="color: var(--text-muted);">deploy staging</span>
-                        </div>
-                        <div style="color: var(--text); padding-left: 16px; border-left: 2px solid var(--border);">
-                            <span style="color: var(--emerald);">✓</span> Marked complete: Deploy staging updates<br>
-                            <span style="color: var(--text-subtle);">3 tasks remaining today.</span>
-                        </div>
+                    </div>
+                    <div class="terminal-input-container">
+                        <span class="prompt">$</span>
+                        <input type="text" id="terminal-input" placeholder="Type /add, /done, /today..." autocomplete="off">
+                    </div>
+                    <div class="command-suggestions">
+                        <button class="suggestion" data-cmd="/standup">/standup</button>
+                        <button class="suggestion" data-cmd="/add buy groceries">/add buy groceries</button>
+                        <button class="suggestion" data-cmd="/done api">/done api</button>
+                        <button class="suggestion" data-cmd="/today">/today</button>
+                        <button class="suggestion" data-cmd="/focus 25m">/focus 25m</button>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Confetti canvas -->
+        <canvas id="confetti-canvas"></canvas>
     </section>
 
     <section class="matrix-section" id="matrix">
@@ -1276,6 +1473,266 @@
                 }
             });
         });
+
+        // ========== INTERACTIVE DEMO ==========
+
+        // Task data
+        const tasks = {
+            api: { title: 'Review API design docs', tags: ['@backend', '!high', '~1h'], completed: false },
+            auth: { title: 'Fix authentication bug', tags: ['@auth', '!high', '~2h'], completed: false },
+            sync: { title: 'Team sync call', tags: ['!medium', '~30m'], completed: false },
+            deploy: { title: 'Deploy staging updates', tags: ['@infra'], completed: true }
+        };
+
+        // Confetti system
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        let confettiParticles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        class Confetti {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 8 + 4;
+                this.speedY = Math.random() * -15 - 5;
+                this.speedX = Math.random() * 10 - 5;
+                this.gravity = 0.5;
+                this.rotation = Math.random() * 360;
+                this.rotationSpeed = Math.random() * 10 - 5;
+                this.color = ['#f59e0b', '#10b981', '#f43f5e', '#8b5cf6', '#fbbf24'][Math.floor(Math.random() * 5)];
+                this.opacity = 1;
+            }
+
+            update() {
+                this.speedY += this.gravity;
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.rotation += this.rotationSpeed;
+                this.opacity -= 0.015;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation * Math.PI / 180);
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.opacity;
+                ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+                ctx.restore();
+            }
+        }
+
+        function createConfetti(x, y, count = 30) {
+            for (let i = 0; i < count; i++) {
+                confettiParticles.push(new Confetti(x, y));
+            }
+        }
+
+        function animateConfetti() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            confettiParticles = confettiParticles.filter(p => p.opacity > 0);
+            confettiParticles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            if (confettiParticles.length > 0) {
+                requestAnimationFrame(animateConfetti);
+            }
+        }
+
+        // Task click handlers
+        document.querySelectorAll('.task-item.interactive').forEach(item => {
+            item.addEventListener('click', function(e) {
+                const taskId = this.dataset.task;
+                toggleTask(taskId, this);
+            });
+        });
+
+        function toggleTask(taskId, element) {
+            const task = tasks[taskId];
+            const checkbox = element.querySelector('.task-checkbox');
+
+            task.completed = !task.completed;
+
+            checkbox.classList.add('checking');
+            setTimeout(() => checkbox.classList.remove('checking'), 500);
+
+            if (task.completed) {
+                checkbox.classList.add('checked');
+                element.classList.add('completed', 'completing');
+
+                // Confetti burst
+                const rect = element.getBoundingClientRect();
+                createConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2, 25);
+                animateConfetti();
+
+                // Add to terminal
+                addTerminalOutput(`<span class="text-success">✓</span> Marked complete: ${task.title}`);
+            } else {
+                checkbox.classList.remove('checked');
+                element.classList.remove('completed', 'completing');
+                addTerminalOutput(`<span class="text-muted">○</span> Unmarked: ${task.title}`);
+            }
+
+            updateTaskCount();
+            checkAllDone();
+        }
+
+        function updateTaskCount() {
+            const remaining = Object.values(tasks).filter(t => !t.completed).length;
+            document.getElementById('tasks-remaining').textContent = `${remaining} task${remaining !== 1 ? 's' : ''} remaining`;
+        }
+
+        function checkAllDone() {
+            const allDone = Object.values(tasks).every(t => t.completed);
+            if (allDone) {
+                // Big celebration!
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(() => {
+                        createConfetti(Math.random() * window.innerWidth, Math.random() * window.innerHeight / 2, 50);
+                        animateConfetti();
+                    }, i * 200);
+                }
+                addTerminalOutput(`<br><span class="text-amber">🎉 ALL TASKS COMPLETE!</span><br><span class="text-muted">You're a productivity machine!</span>`);
+            }
+        }
+
+        function resetTasks() {
+            Object.keys(tasks).forEach(id => {
+                if (id !== 'deploy') {
+                    tasks[id].completed = false;
+                } else {
+                    tasks[id].completed = true;
+                }
+            });
+
+            document.querySelectorAll('.task-item.interactive').forEach(item => {
+                const taskId = item.dataset.task;
+                const checkbox = item.querySelector('.task-checkbox');
+
+                if (tasks[taskId].completed) {
+                    checkbox.classList.add('checked');
+                    item.classList.add('completed');
+                } else {
+                    checkbox.classList.remove('checked');
+                    item.classList.remove('completed', 'completing');
+                }
+            });
+
+            updateTaskCount();
+            addTerminalOutput(`<span class="text-muted">↺</span> Tasks reset to initial state`);
+        }
+
+        // Terminal functionality
+        const terminalInput = document.getElementById('terminal-input');
+        const terminalOutput = document.getElementById('terminal-output');
+
+        function addTerminalOutput(html, isCommand = false) {
+            const line = document.createElement('div');
+            line.className = 'terminal-line-interactive';
+            if (isCommand) {
+                line.innerHTML = `<span class="text-success">$</span> <span class="text-amber">${html}</span>`;
+            } else {
+                line.innerHTML = html;
+            }
+            terminalOutput.appendChild(line);
+            terminalOutput.scrollTop = terminalOutput.scrollHeight;
+        }
+
+        function processCommand(cmd) {
+            addTerminalOutput(cmd, true);
+
+            const parts = cmd.trim().toLowerCase().split(' ');
+            const command = parts[0];
+            const args = parts.slice(1).join(' ');
+
+            switch (command) {
+                case '/standup':
+                    const remaining = Object.values(tasks).filter(t => !t.completed).length;
+                    addTerminalOutput(`<span class="text-muted">Good morning! ☀️</span><br>You have <span class="text-amber">${remaining}</span> focus tasks today.`);
+                    break;
+
+                case '/today':
+                    let output = '<span class="text-muted">Today\'s tasks:</span><br>';
+                    Object.entries(tasks).forEach(([id, task]) => {
+                        const status = task.completed ? '<span class="text-success">[✓]</span>' : '<span class="text-muted">[ ]</span>';
+                        output += `${status} ${task.title}<br>`;
+                    });
+                    addTerminalOutput(output);
+                    break;
+
+                case '/add':
+                    if (args) {
+                        addTerminalOutput(`Added to inbox:<br><span class="text-muted">- [ ]</span> ${args} <span class="task-tag project" style="font-size:0.7rem">@inbox</span> <span class="task-tag time" style="font-size:0.7rem">~1h</span>`);
+                    } else {
+                        addTerminalOutput('<span class="text-muted">Usage: /add &lt;task description&gt;</span>');
+                    }
+                    break;
+
+                case '/done':
+                    if (args) {
+                        const matchedTask = Object.entries(tasks).find(([id, t]) =>
+                            id.includes(args) || t.title.toLowerCase().includes(args)
+                        );
+                        if (matchedTask && !matchedTask[1].completed) {
+                            const [id, task] = matchedTask;
+                            const element = document.querySelector(`[data-task="${id}"]`);
+                            if (element) toggleTask(id, element);
+                        } else if (matchedTask && matchedTask[1].completed) {
+                            addTerminalOutput(`<span class="text-muted">Task already completed</span>`);
+                        } else {
+                            addTerminalOutput(`<span class="text-muted">Task not found: ${args}</span>`);
+                        }
+                    } else {
+                        addTerminalOutput('<span class="text-muted">Usage: /done &lt;task name&gt;</span>');
+                    }
+                    break;
+
+                case '/focus':
+                    const time = args || '25m';
+                    addTerminalOutput(`<span class="text-amber">🎯 Focus mode activated!</span><br><span class="text-muted">Duration: ${time}</span><br><span class="text-muted">Stay in the zone. You got this!</span>`);
+                    break;
+
+                case '/inbox':
+                    addTerminalOutput(`<span class="text-muted">Inbox is empty. Great job staying organized!</span>`);
+                    break;
+
+                case '/help':
+                    addTerminalOutput(`<span class="text-muted">Available commands:</span><br>/standup - Daily planning<br>/today - Show tasks<br>/add &lt;task&gt; - Add task<br>/done &lt;task&gt; - Complete task<br>/focus [time] - Focus mode<br>/inbox - Process inbox`);
+                    break;
+
+                default:
+                    addTerminalOutput(`<span class="text-muted">Unknown command. Try /help</span>`);
+            }
+        }
+
+        terminalInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && this.value.trim()) {
+                processCommand(this.value);
+                this.value = '';
+            }
+        });
+
+        // Command suggestions
+        document.querySelectorAll('.suggestion').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const cmd = this.dataset.cmd;
+                terminalInput.value = cmd;
+                terminalInput.focus();
+                processCommand(cmd);
+                terminalInput.value = '';
+            });
+        });
+
+        // Initialize
+        updateTaskCount();
     </script>
 </body>
 </html>
