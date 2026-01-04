@@ -3,18 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Claude Tasks - GTD-Powered Task Management</title>
+    <title>Claude Tasks — GTD Perfected</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0d1117;
-            --surface: #161b22;
-            --border: #30363d;
-            --text: #c9d1d9;
-            --text-muted: #8b949e;
-            --accent: #58a6ff;
-            --success: #3fb950;
-            --warning: #d29922;
-            --danger: #f85149;
+            --noir: #08080a;
+            --surface: #111113;
+            --surface-elevated: #18181b;
+            --border: #27272a;
+            --border-subtle: #1c1c1f;
+            --text: #fafafa;
+            --text-muted: #71717a;
+            --text-subtle: #52525b;
+            --amber: #f59e0b;
+            --amber-glow: #fbbf24;
+            --amber-dim: #b45309;
+            --emerald: #10b981;
+            --rose: #f43f5e;
+            --violet: #8b5cf6;
         }
 
         * {
@@ -23,367 +31,1118 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-            background: var(--bg);
+            font-family: 'DM Sans', sans-serif;
+            background: var(--noir);
             color: var(--text);
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
+        /* Grain Overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(3deg); }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(245, 158, 11, 0.5); }
+        }
+
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100vh); }
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+        .delay-5 { animation-delay: 0.5s; }
+
+        /* Layout */
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 0 24px;
+            padding: 0 clamp(24px, 5vw, 80px);
         }
 
-        /* Hero */
-        .hero {
-            padding: 80px 0;
-            text-align: center;
-            border-bottom: 1px solid var(--border);
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 24px 0;
+            background: linear-gradient(to bottom, var(--noir) 0%, transparent 100%);
+            backdrop-filter: blur(12px);
         }
 
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 16px;
-            background: linear-gradient(135deg, var(--accent), #a371f7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .hero p {
-            font-size: 1.25rem;
+        .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--amber);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--amber) 0%, var(--amber-dim) 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
             color: var(--text-muted);
-            max-width: 600px;
-            margin: 0 auto 32px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
         }
 
-        .badge {
-            display: inline-block;
+        .nav-links a:hover {
+            color: var(--amber);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding: 120px 0 80px;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(245, 158, 11, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 40% at 80% 60%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse 50% 30% at 20% 80%, rgba(16, 185, 129, 0.06) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .hero-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse 70% 50% at 50% 50%, black 0%, transparent 70%);
+            z-index: -1;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .hero-text {
+            max-width: 600px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             background: var(--surface);
             border: 1px solid var(--border);
             padding: 8px 16px;
-            border-radius: 24px;
-            font-size: 0.875rem;
+            border-radius: 100px;
+            font-size: 0.8rem;
             color: var(--text-muted);
+            margin-bottom: 32px;
         }
 
-        /* Features */
+        .hero-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--emerald);
+            border-radius: 50%;
+            animation: pulse-glow 2s infinite;
+            box-shadow: 0 0 10px var(--emerald);
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 7vw, 5.5rem);
+            font-weight: 700;
+            line-height: 1.05;
+            margin-bottom: 24px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, var(--amber) 0%, var(--amber-glow) 50%, var(--amber) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient-shift 4s ease infinite;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            max-width: 500px;
+            line-height: 1.7;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--amber) 0%, var(--amber-dim) 100%);
+            color: var(--noir);
+            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 40px rgba(245, 158, 11, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--surface-elevated);
+            border-color: var(--amber);
+        }
+
+        /* Hero Terminal */
+        .hero-terminal {
+            position: relative;
+        }
+
+        .terminal {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow:
+                0 4px 60px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+            transform: perspective(1000px) rotateY(-5deg) rotateX(2deg);
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .terminal:hover {
+            transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
+        }
+
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 20px;
+            background: var(--noir);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-dot.red { background: #ff5f56; }
+        .terminal-dot.yellow { background: #ffbd2e; }
+        .terminal-dot.green { background: #27ca40; }
+
+        .terminal-title {
+            flex: 1;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-subtle);
+            margin-right: 44px;
+        }
+
+        .terminal-body {
+            padding: 24px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.8;
+            position: relative;
+        }
+
+        .terminal-body::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 0, 0, 0.03) 2px,
+                rgba(0, 0, 0, 0.03) 4px
+            );
+            pointer-events: none;
+        }
+
+        .terminal-line {
+            margin-bottom: 16px;
+            opacity: 0;
+            animation: fadeInUp 0.5s forwards;
+        }
+
+        .terminal-line:nth-child(1) { animation-delay: 0.3s; }
+        .terminal-line:nth-child(2) { animation-delay: 0.6s; }
+        .terminal-line:nth-child(3) { animation-delay: 0.9s; }
+        .terminal-line:nth-child(4) { animation-delay: 1.2s; }
+        .terminal-line:nth-child(5) { animation-delay: 1.5s; }
+
+        .prompt {
+            color: var(--emerald);
+        }
+
+        .command {
+            color: var(--amber);
+        }
+
+        .output {
+            color: var(--text-muted);
+            padding-left: 16px;
+            border-left: 2px solid var(--border);
+            margin: 8px 0 16px 8px;
+        }
+
+        .output .task {
+            color: var(--text);
+        }
+
+        .output .tag {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin-left: 4px;
+        }
+
+        .tag-project { background: rgba(139, 92, 246, 0.2); color: var(--violet); }
+        .tag-priority { background: rgba(244, 63, 94, 0.2); color: var(--rose); }
+        .tag-time { background: rgba(16, 185, 129, 0.2); color: var(--emerald); }
+
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 18px;
+            background: var(--amber);
+            margin-left: 4px;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+
+        /* Floating shapes */
+        .floating-shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            z-index: -1;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            background: var(--amber);
+            opacity: 0.1;
+            top: -100px;
+            right: -100px;
+            animation-delay: 0s;
+        }
+
+        .shape-2 {
+            width: 200px;
+            height: 200px;
+            background: var(--violet);
+            opacity: 0.08;
+            bottom: 50px;
+            left: -50px;
+            animation-delay: 2s;
+        }
+
+        /* Features Section */
         .features {
-            padding: 80px 0;
+            padding: 160px 0;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--amber);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .section-subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 24px;
         }
 
-        .feature {
+        .feature-card {
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 24px;
+            border-radius: 20px;
+            padding: 40px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
         }
 
-        .feature h3 {
-            color: var(--accent);
-            margin-bottom: 8px;
-            font-size: 1.1rem;
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--amber), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
         }
 
-        .feature p {
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--amber);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--surface-elevated) 0%, var(--noir) 100%);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            font-size: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--amber);
+        }
+
+        .feature-card p {
             color: var(--text-muted);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            line-height: 1.7;
         }
 
         /* Demo Section */
         .demo {
-            padding: 80px 0;
-            border-top: 1px solid var(--border);
+            padding: 160px 0;
+            background: var(--surface);
+            position: relative;
         }
 
-        .demo h2 {
-            text-align: center;
-            margin-bottom: 48px;
-            font-size: 2rem;
+        .demo::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
         }
 
         .demo-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 24px;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: start;
         }
 
         .demo-card {
-            background: var(--surface);
+            background: var(--noir);
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: 20px;
             overflow: hidden;
         }
 
         .demo-card-header {
-            background: var(--bg);
-            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px;
             border-bottom: 1px solid var(--border);
+            background: var(--surface-elevated);
+        }
+
+        .demo-card-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
             font-weight: 600;
-            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .demo-card-content {
-            padding: 16px;
-            font-family: 'SF Mono', 'Fira Code', monospace;
-            font-size: 0.8rem;
+        .demo-card-title::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: var(--amber);
+            border-radius: 50%;
         }
 
-        .task {
+        .demo-card-meta {
+            font-size: 0.75rem;
+            color: var(--text-subtle);
+        }
+
+        .demo-card-body {
+            padding: 24px;
+        }
+
+        .task-item {
             display: flex;
             align-items: flex-start;
-            gap: 8px;
-            padding: 8px 0;
-            border-bottom: 1px solid var(--border);
+            gap: 16px;
+            padding: 16px;
+            margin-bottom: 8px;
+            background: var(--surface);
+            border-radius: 12px;
+            border: 1px solid transparent;
+            transition: all 0.2s;
         }
 
-        .task:last-child {
-            border-bottom: none;
+        .task-item:hover {
+            border-color: var(--border);
         }
 
-        .checkbox {
-            width: 16px;
-            height: 16px;
+        .task-checkbox {
+            width: 22px;
+            height: 22px;
             border: 2px solid var(--border);
-            border-radius: 4px;
+            border-radius: 6px;
             flex-shrink: 0;
             margin-top: 2px;
+            transition: all 0.2s;
+            position: relative;
         }
 
-        .checkbox.done {
-            background: var(--success);
-            border-color: var(--success);
+        .task-checkbox.checked {
+            background: var(--emerald);
+            border-color: var(--emerald);
         }
 
-        .task-text {
+        .task-checkbox.checked::after {
+            content: '✓';
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--noir);
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .task-content {
             flex: 1;
         }
 
-        .task.done .task-text {
+        .task-title {
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+        }
+
+        .task-item.completed .task-title {
             text-decoration: line-through;
             color: var(--text-muted);
         }
 
-        .tag {
-            display: inline-block;
-            padding: 2px 6px;
-            border-radius: 4px;
+        .task-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .task-tag {
+            font-family: 'JetBrains Mono', monospace;
             font-size: 0.7rem;
-            margin-left: 4px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 500;
         }
 
-        .tag.project { background: #1f6feb33; color: #58a6ff; }
-        .tag.priority-high { background: #f8514933; color: #f85149; }
-        .tag.priority-medium { background: #d2992233; color: #d29922; }
-        .tag.time { background: #3fb95033; color: #3fb950; }
-
-        /* Commands */
-        .commands {
-            padding: 80px 0;
-            border-top: 1px solid var(--border);
+        .task-tag.project {
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--violet);
         }
 
-        .commands h2 {
-            text-align: center;
-            margin-bottom: 48px;
-            font-size: 2rem;
+        .task-tag.high {
+            background: rgba(244, 63, 94, 0.15);
+            color: var(--rose);
         }
 
-        .command-grid {
+        .task-tag.medium {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--amber);
+        }
+
+        .task-tag.time {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--emerald);
+        }
+
+        /* Matrix Section */
+        .matrix-section {
+            padding: 160px 0;
+        }
+
+        .matrix-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 80px;
+            align-items: center;
         }
 
-        .command {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 16px;
+        .matrix-text h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            margin-bottom: 24px;
         }
 
-        .command code {
-            color: var(--accent);
-            font-family: 'SF Mono', 'Fira Code', monospace;
-            font-size: 0.9rem;
-        }
-
-        .command p {
+        .matrix-text p {
             color: var(--text-muted);
-            font-size: 0.8rem;
-            margin-top: 4px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 32px;
         }
 
-        /* GTD Section */
-        .gtd {
-            padding: 80px 0;
-            border-top: 1px solid var(--border);
-        }
-
-        .gtd h2 {
-            text-align: center;
-            margin-bottom: 16px;
-            font-size: 2rem;
-        }
-
-        .gtd > p {
-            text-align: center;
-            color: var(--text-muted);
-            margin-bottom: 48px;
-        }
-
-        .matrix {
+        .matrix-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 16px;
-            max-width: 600px;
-            margin: 0 auto;
         }
 
         .matrix-cell {
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 20px;
+            border-radius: 16px;
+            padding: 32px;
             text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .matrix-cell::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+        }
+
+        .matrix-cell.q1::before { background: var(--rose); }
+        .matrix-cell.q2::before { background: var(--amber); }
+        .matrix-cell.q3::before { background: var(--violet); }
+        .matrix-cell.q4::before { background: var(--text-subtle); }
+
+        .matrix-cell:hover {
+            transform: scale(1.02);
         }
 
         .matrix-cell h4 {
-            font-size: 0.9rem;
-            margin-bottom: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
         }
+
+        .matrix-cell.q1 h4 { color: var(--rose); }
+        .matrix-cell.q2 h4 { color: var(--amber); }
+        .matrix-cell.q3 h4 { color: var(--violet); }
+        .matrix-cell.q4 h4 { color: var(--text-subtle); }
 
         .matrix-cell p {
             color: var(--text-muted);
-            font-size: 0.8rem;
+            font-size: 0.85rem;
+            line-height: 1.6;
         }
 
-        .matrix-cell.q1 { border-color: var(--danger); }
-        .matrix-cell.q1 h4 { color: var(--danger); }
-        .matrix-cell.q2 { border-color: var(--accent); }
-        .matrix-cell.q2 h4 { color: var(--accent); }
-        .matrix-cell.q3 { border-color: var(--warning); }
-        .matrix-cell.q3 h4 { color: var(--warning); }
-        .matrix-cell.q4 { border-color: var(--text-muted); }
-        .matrix-cell.q4 h4 { color: var(--text-muted); }
+        /* Commands Section */
+        .commands {
+            padding: 160px 0;
+            background: var(--surface);
+        }
+
+        .commands-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .command-item {
+            background: var(--noir);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 24px;
+            transition: all 0.3s;
+        }
+
+        .command-item:hover {
+            border-color: var(--amber);
+            transform: translateY(-4px);
+        }
+
+        .command-item code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            color: var(--amber);
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .command-item p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
 
         /* Footer */
         footer {
-            padding: 40px 0;
+            padding: 80px 0;
             border-top: 1px solid var(--border);
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.875rem;
         }
 
-        footer a {
-            color: var(--accent);
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-text {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .footer-text a {
+            color: var(--amber);
             text-decoration: none;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 32px;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--amber);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-text {
+                max-width: 100%;
+            }
+
+            .hero-subtitle {
+                margin: 0 auto 40px;
+            }
+
+            .hero-cta {
+                justify-content: center;
+            }
+
+            .hero-terminal {
+                max-width: 600px;
+                margin: 0 auto;
+            }
+
+            .terminal {
+                transform: none;
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .matrix-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .commands-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .commands-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 24px;
+                text-align: center;
+            }
         }
     </style>
 </head>
 <body>
+    <nav>
+        <div class="container">
+            <a href="#" class="logo">
+                <div class="logo-icon">✓</div>
+                Claude Tasks
+            </a>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#demo">Demo</a></li>
+                <li><a href="#matrix">Prioritize</a></li>
+                <li><a href="#commands">Commands</a></li>
+            </ul>
+        </div>
+    </nav>
+
     <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-grid"></div>
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+
         <div class="container">
-            <h1>Claude Tasks</h1>
-            <p>A GTD-based personal task management system powered by Claude Code. Capture, clarify, organize, and execute with AI assistance.</p>
-            <span class="badge">Built with Claude Code Skills, Commands & Agents</span>
+            <div class="hero-content">
+                <div class="hero-text">
+                    <div class="hero-badge animate-in">
+                        Powered by Claude Code
+                    </div>
+                    <h1 class="animate-in delay-1">
+                        GTD,<br><span class="highlight">perfected.</span>
+                    </h1>
+                    <p class="hero-subtitle animate-in delay-2">
+                        A personal task management system that thinks the way you do.
+                        Capture, clarify, organize, and execute—with AI that understands context.
+                    </p>
+                    <div class="hero-cta animate-in delay-3">
+                        <a href="https://github.com/aviz85/claude-tasks" class="btn btn-primary">
+                            Get Started
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M3 8H13M13 8L8 3M13 8L8 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
+                        <a href="#demo" class="btn btn-secondary">See Demo</a>
+                    </div>
+                </div>
+
+                <div class="hero-terminal animate-in delay-4">
+                    <div class="terminal">
+                        <div class="terminal-header">
+                            <div class="terminal-dot red"></div>
+                            <div class="terminal-dot yellow"></div>
+                            <div class="terminal-dot green"></div>
+                            <div class="terminal-title">claude-tasks — zsh</div>
+                        </div>
+                        <div class="terminal-body">
+                            <div class="terminal-line">
+                                <span class="prompt">$</span> <span class="command">/standup</span>
+                            </div>
+                            <div class="terminal-line output">
+                                Good morning! You have 3 focus tasks today.
+                            </div>
+                            <div class="terminal-line">
+                                <span class="prompt">$</span> <span class="command">/add fix login bug urgently</span>
+                            </div>
+                            <div class="terminal-line output">
+                                Added: <span class="task">Fix login bug</span>
+                                <span class="tag tag-project">@work</span>
+                                <span class="tag tag-priority">!high</span>
+                                <span class="tag tag-time">~1h</span>
+                            </div>
+                            <div class="terminal-line">
+                                <span class="prompt">$</span> <span class="command">/focus</span><span class="cursor"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
-    <section class="features">
-        <div class="container" style="display: contents;">
-            <div class="feature">
-                <h3>/add - Instant Capture</h3>
-                <p>Brain dump anything. Natural language parsing extracts priority, time estimates, projects, and tags automatically.</p>
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">Features</div>
+                <h2 class="section-title">Everything GTD, nothing else</h2>
+                <p class="section-subtitle">Built on proven productivity principles, powered by modern AI</p>
             </div>
-            <div class="feature">
-                <h3>/standup - Daily Planning</h3>
-                <p>Start each day with clarity. Review yesterday, process inbox, select your top 3 focus tasks.</p>
-            </div>
-            <div class="feature">
-                <h3>/focus - Deep Work Mode</h3>
-                <p>Single-task focus sessions. New ideas go to inbox. Stay in the zone.</p>
-            </div>
-            <div class="feature">
-                <h3>/review - Weekly Retrospective</h3>
-                <p>Friday ritual. Analyze patterns, clean up stale tasks, plan next week's priorities.</p>
-            </div>
-            <div class="feature">
-                <h3>Eisenhower Matrix</h3>
-                <p>Automatic prioritization using urgent/important quadrants. Never wonder what to work on next.</p>
-            </div>
-            <div class="feature">
-                <h3>Smart Estimation</h3>
-                <p>AI-powered time estimates based on task type and complexity. Plan realistic days.</p>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>/add</h3>
+                    <p>Brain dump anything. Natural language parsing extracts priority, time estimates, projects, and tags automatically.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">☀️</div>
+                    <h3>/standup</h3>
+                    <p>Start each day with clarity. Review yesterday, process inbox, select your top 3 focus tasks.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>/focus</h3>
+                    <p>Single-task focus sessions. New ideas go to inbox. Stay in the zone until done.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>/review</h3>
+                    <p>Friday ritual. Analyze patterns, clean up stale tasks, plan next week's priorities.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🧭</div>
+                    <h3>Eisenhower Matrix</h3>
+                    <p>Automatic prioritization using urgent/important quadrants. Never wonder what to work on next.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⏱️</div>
+                    <h3>Smart Estimation</h3>
+                    <p>AI-powered time estimates based on task type and complexity. Plan realistic days.</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <section class="demo">
+    <section class="demo" id="demo">
         <div class="container">
-            <h2>See it in action</h2>
+            <div class="section-header">
+                <div class="section-label">Demo</div>
+                <h2 class="section-title">See it in action</h2>
+                <p class="section-subtitle">Real markdown files, real terminal commands, real productivity</p>
+            </div>
+
             <div class="demo-grid">
                 <div class="demo-card">
-                    <div class="demo-card-header">today.md</div>
-                    <div class="demo-card-content">
-                        <div class="task">
-                            <div class="checkbox"></div>
-                            <div class="task-text">
-                                Review API design docs
-                                <span class="tag project">@backend</span>
-                                <span class="tag priority-high">!high</span>
-                                <span class="tag time">~1h</span>
+                    <div class="demo-card-header">
+                        <div class="demo-card-title">today.md</div>
+                        <div class="demo-card-meta">3 tasks remaining</div>
+                    </div>
+                    <div class="demo-card-body">
+                        <div class="task-item">
+                            <div class="task-checkbox"></div>
+                            <div class="task-content">
+                                <div class="task-title">Review API design docs</div>
+                                <div class="task-tags">
+                                    <span class="task-tag project">@backend</span>
+                                    <span class="task-tag high">!high</span>
+                                    <span class="task-tag time">~1h</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="task">
-                            <div class="checkbox"></div>
-                            <div class="task-text">
-                                Fix authentication bug
-                                <span class="tag project">@auth</span>
-                                <span class="tag priority-high">!high</span>
-                                <span class="tag time">~2h</span>
+                        <div class="task-item">
+                            <div class="task-checkbox"></div>
+                            <div class="task-content">
+                                <div class="task-title">Fix authentication bug</div>
+                                <div class="task-tags">
+                                    <span class="task-tag project">@auth</span>
+                                    <span class="task-tag high">!high</span>
+                                    <span class="task-tag time">~2h</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="task">
-                            <div class="checkbox"></div>
-                            <div class="task-text">
-                                Team sync call
-                                <span class="tag priority-medium">!medium</span>
-                                <span class="tag time">~30m</span>
+                        <div class="task-item">
+                            <div class="task-checkbox"></div>
+                            <div class="task-content">
+                                <div class="task-title">Team sync call</div>
+                                <div class="task-tags">
+                                    <span class="task-tag medium">!medium</span>
+                                    <span class="task-tag time">~30m</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="task done">
-                            <div class="checkbox done"></div>
-                            <div class="task-text">
-                                Deploy staging updates
-                                <span class="tag project">@infra</span>
+                        <div class="task-item completed">
+                            <div class="task-checkbox checked"></div>
+                            <div class="task-content">
+                                <div class="task-title">Deploy staging updates</div>
+                                <div class="task-tags">
+                                    <span class="task-tag project">@infra</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="demo-card">
-                    <div class="demo-card-header">Terminal</div>
-                    <div class="demo-card-content" style="color: var(--text-muted);">
-                        <div style="margin-bottom: 12px;">
-                            <span style="color: var(--success);">$</span> /add urgent: fix login timeout issue
+                    <div class="demo-card-header">
+                        <div class="demo-card-title">Terminal</div>
+                        <div class="demo-card-meta">zsh</div>
+                    </div>
+                    <div class="demo-card-body" style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;">
+                        <div style="margin-bottom: 20px;">
+                            <span style="color: var(--emerald);">$</span> <span style="color: var(--amber);">/add</span> <span style="color: var(--text-muted);">urgent: fix login timeout</span>
                         </div>
-                        <div style="color: var(--text); margin-bottom: 12px;">
+                        <div style="color: var(--text); margin-bottom: 24px; padding-left: 16px; border-left: 2px solid var(--border);">
                             Added to inbox:<br>
-                            <span style="color: var(--accent);">- [ ] Fix login timeout issue @work #bug !high ~1h</span>
+                            <span style="color: var(--text-muted);">- [ ]</span> Fix login timeout issue
+                            <span class="task-tag project" style="font-size: 0.7rem;">@work</span>
+                            <span class="task-tag high" style="font-size: 0.7rem;">!high</span>
+                            <span class="task-tag time" style="font-size: 0.7rem;">~1h</span>
                         </div>
-                        <div style="margin-bottom: 12px;">
-                            <span style="color: var(--success);">$</span> /done deploy staging
+                        <div style="margin-bottom: 20px;">
+                            <span style="color: var(--emerald);">$</span> <span style="color: var(--amber);">/done</span> <span style="color: var(--text-muted);">deploy staging</span>
                         </div>
-                        <div style="color: var(--text);">
-                            Marked complete: Deploy staging updates<br>
-                            <span style="color: var(--text-muted);">3 tasks remaining today.</span>
+                        <div style="color: var(--text); padding-left: 16px; border-left: 2px solid var(--border);">
+                            <span style="color: var(--emerald);">✓</span> Marked complete: Deploy staging updates<br>
+                            <span style="color: var(--text-subtle);">3 tasks remaining today.</span>
                         </div>
                     </div>
                 </div>
@@ -391,66 +1150,77 @@
         </div>
     </section>
 
-    <section class="commands">
+    <section class="matrix-section" id="matrix">
         <div class="container">
-            <h2>Commands</h2>
-            <div class="command-grid">
-                <div class="command">
+            <div class="matrix-container">
+                <div class="matrix-text">
+                    <div class="section-label">Prioritization</div>
+                    <h2>The Eisenhower Matrix</h2>
+                    <p>Stop wondering what to work on next. Every task automatically gets classified based on urgency and importance, so you always know where to focus your energy.</p>
+                </div>
+
+                <div class="matrix-grid">
+                    <div class="matrix-cell q1">
+                        <h4>Do First</h4>
+                        <p>Urgent + Important<br>!high priority</p>
+                    </div>
+                    <div class="matrix-cell q2">
+                        <h4>Schedule</h4>
+                        <p>Important, Not Urgent<br>!medium priority</p>
+                    </div>
+                    <div class="matrix-cell q3">
+                        <h4>Delegate</h4>
+                        <p>Urgent, Not Important<br>!low priority</p>
+                    </div>
+                    <div class="matrix-cell q4">
+                        <h4>Eliminate</h4>
+                        <p>Not Important<br>Consider removing</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="commands" id="commands">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-label">Commands</div>
+                <h2 class="section-title">Your productivity toolkit</h2>
+                <p class="section-subtitle">Simple commands that do exactly what you expect</p>
+            </div>
+
+            <div class="commands-grid">
+                <div class="command-item">
                     <code>/add &lt;task&gt;</code>
                     <p>Quick add to inbox</p>
                 </div>
-                <div class="command">
+                <div class="command-item">
                     <code>/today</code>
                     <p>Show today's tasks</p>
                 </div>
-                <div class="command">
+                <div class="command-item">
                     <code>/done &lt;task&gt;</code>
                     <p>Mark task complete</p>
                 </div>
-                <div class="command">
+                <div class="command-item">
                     <code>/standup</code>
-                    <p>Daily planning</p>
+                    <p>Daily planning ritual</p>
                 </div>
-                <div class="command">
+                <div class="command-item">
                     <code>/review</code>
                     <p>Weekly retrospective</p>
                 </div>
-                <div class="command">
+                <div class="command-item">
                     <code>/prioritize</code>
                     <p>Re-prioritize tasks</p>
                 </div>
-                <div class="command">
+                <div class="command-item">
                     <code>/focus [time]</code>
                     <p>Deep work mode</p>
                 </div>
-                <div class="command">
+                <div class="command-item">
                     <code>/inbox</code>
-                    <p>Process inbox</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="gtd">
-        <div class="container">
-            <h2>Eisenhower Matrix</h2>
-            <p>Automatic prioritization based on urgency and importance</p>
-            <div class="matrix">
-                <div class="matrix-cell q1">
-                    <h4>Q1: Do First</h4>
-                    <p>Urgent + Important<br>!high priority</p>
-                </div>
-                <div class="matrix-cell q2">
-                    <h4>Q2: Schedule</h4>
-                    <p>Important, Not Urgent<br>!medium priority</p>
-                </div>
-                <div class="matrix-cell q3">
-                    <h4>Q3: Delegate</h4>
-                    <p>Urgent, Not Important<br>!low priority</p>
-                </div>
-                <div class="matrix-cell q4">
-                    <h4>Q4: Eliminate</h4>
-                    <p>Not Urgent, Not Important<br>Consider removing</p>
+                    <p>Process inbox items</p>
                 </div>
             </div>
         </div>
@@ -458,8 +1228,54 @@
 
     <footer>
         <div class="container">
-            <p>Built with <a href="https://claude.ai/code" target="_blank">Claude Code</a> - Skills, Commands & Sub-Agents</p>
+            <div class="footer-content">
+                <div class="footer-text">
+                    Built with <a href="https://claude.ai/code" target="_blank">Claude Code</a> — Skills, Commands & Sub-Agents
+                </div>
+                <div class="footer-links">
+                    <a href="https://github.com/aviz85/claude-tasks" target="_blank">GitHub</a>
+                    <a href="https://claude.ai/code" target="_blank">Claude Code</a>
+                </div>
+            </div>
         </div>
     </footer>
+
+    <script>
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card, .demo-card, .matrix-cell, .command-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Smooth scroll for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
