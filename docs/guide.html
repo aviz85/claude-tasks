@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Started — Claude Tasks</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --noir: #08080a;
+            --surface: #111113;
+            --surface-elevated: #18181b;
+            --border: #27272a;
+            --border-subtle: #1c1c1f;
+            --text: #fafafa;
+            --text-muted: #71717a;
+            --text-subtle: #52525b;
+            --amber: #f59e0b;
+            --amber-glow: #fbbf24;
+            --amber-dim: #b45309;
+            --emerald: #10b981;
+            --rose: #f43f5e;
+            --violet: #8b5cf6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--noir);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Grain Overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .animate-in {
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 clamp(24px, 5vw, 80px);
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 24px 0;
+            background: linear-gradient(to bottom, var(--noir) 0%, transparent 100%);
+            backdrop-filter: blur(12px);
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+        }
+
+        .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--amber);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--amber) 0%, var(--amber-dim) 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--amber);
+        }
+
+        /* Hero */
+        .hero {
+            padding: 160px 0 80px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(245, 158, 11, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 40% at 80% 60%, rgba(139, 92, 246, 0.06) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, var(--amber) 0%, var(--amber-glow) 50%, var(--amber) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient-shift 4s ease infinite;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Options */
+        .options {
+            padding: 60px 0 120px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        .option-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 48px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .option-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .option-card.diy::before {
+            background: linear-gradient(90deg, var(--amber), var(--amber-glow));
+        }
+
+        .option-card.clone::before {
+            background: linear-gradient(90deg, var(--violet), var(--rose));
+        }
+
+        .option-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--amber);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .option-card:hover::before {
+            opacity: 1;
+        }
+
+        .option-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--surface-elevated);
+            border: 1px solid var(--border);
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .option-badge.recommended {
+            border-color: var(--amber);
+            color: var(--amber);
+        }
+
+        .option-card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            margin-bottom: 16px;
+        }
+
+        .option-card > p {
+            color: var(--text-muted);
+            margin-bottom: 32px;
+            line-height: 1.7;
+        }
+
+        .time-estimate {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--emerald);
+            margin-bottom: 32px;
+        }
+
+        /* Steps */
+        .steps {
+            margin-bottom: 32px;
+        }
+
+        .step {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .step-number {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            background: var(--surface-elevated);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--amber);
+        }
+
+        .step-content h4 {
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+
+        .step-content p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Code Block */
+        .code-block {
+            background: var(--noir);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: var(--surface-elevated);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .code-lang {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-subtle);
+        }
+
+        .copy-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .copy-btn:hover {
+            border-color: var(--amber);
+            color: var(--amber);
+        }
+
+        .copy-btn.copied {
+            border-color: var(--emerald);
+            color: var(--emerald);
+        }
+
+        .code-body {
+            padding: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        .code-body pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .code-comment {
+            color: var(--text-subtle);
+        }
+
+        .code-string {
+            color: var(--emerald);
+        }
+
+        .code-keyword {
+            color: var(--amber);
+        }
+
+        .code-command {
+            color: var(--violet);
+        }
+
+        /* Prompt textarea */
+        .prompt-container {
+            position: relative;
+        }
+
+        .prompt-textarea {
+            width: 100%;
+            min-height: 200px;
+            background: var(--noir);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--text);
+            resize: vertical;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .prompt-textarea:focus {
+            border-color: var(--amber);
+        }
+
+        .prompt-textarea::placeholder {
+            color: var(--text-subtle);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--amber) 0%, var(--amber-dim) 100%);
+            color: var(--noir);
+            box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 40px rgba(245, 158, 11, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--surface-elevated);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+            border-color: var(--amber);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        /* File structure */
+        .file-tree {
+            background: var(--noir);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            margin: 20px 0;
+        }
+
+        .file-tree-item {
+            padding: 4px 0;
+            color: var(--text-muted);
+        }
+
+        .file-tree-item.folder {
+            color: var(--amber);
+        }
+
+        .file-tree-item.file {
+            color: var(--text);
+            padding-left: 20px;
+        }
+
+        .file-tree-item .desc {
+            color: var(--text-subtle);
+            font-size: 0.75rem;
+            margin-left: 12px;
+        }
+
+        /* Footer */
+        footer {
+            padding: 60px 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-text {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .footer-text a {
+            color: var(--amber);
+            text-decoration: none;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 32px;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--amber);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 24px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">✓</div>
+                Claude Tasks
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html#features">Features</a></li>
+                <li><a href="index.html#demo">Demo</a></li>
+                <li><a href="guide.html" class="active">Get Started</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="container">
+            <h1 class="animate-in">Get <span class="highlight">Started</span></h1>
+            <p class="animate-in delay-1">Two ways to build your own GTD system with Claude Code</p>
+        </div>
+    </section>
+
+    <section class="options">
+        <div class="container">
+            <div class="options-grid">
+                <!-- DIY Option -->
+                <div class="option-card diy animate-in delay-2">
+                    <div class="option-badge recommended">Recommended</div>
+                    <h2>DIY: Prompt Claude Code</h2>
+                    <p>Start fresh and let Claude Code create a custom task management system tailored to your workflow. Just paste the prompt below.</p>
+
+                    <div class="time-estimate">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M8 5V8L10 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                        ~5 minutes
+                    </div>
+
+                    <div class="steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Open Claude Code</h4>
+                                <p>In your terminal or preferred environment</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Paste the prompt</h4>
+                                <p>Copy the prompt below and send it to Claude</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Start using!</h4>
+                                <p>Claude will create the system and explain how to use it</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">Prompt</span>
+                            <button class="copy-btn" onclick="copyPrompt(this)">Copy</button>
+                        </div>
+                        <div class="code-body">
+                            <pre id="diy-prompt">Create a GTD (Getting Things Done) task management system for me.
+
+Requirements:
+- Use markdown files for storage (tasks/inbox.md, tasks/today.md, tasks/backlog.md, tasks/someday.md)
+- Create Claude Code commands: /add, /today, /done, /standup, /review, /focus, /inbox, /prioritize
+- Create skills for: task-parsing (natural language to structured tasks), priority-matrix (Eisenhower matrix), time-estimation
+- Task format: "- [ ] Task @project #tag !priority ~estimate"
+- Priorities: !high, !medium, !low
+- Time estimates: ~15m, ~30m, ~1h, ~2h, ~4h
+
+Create the file structure, CLAUDE.md documentation, and all necessary skill/command files. Start with a brief explanation, then create everything.</pre>
+                        </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="copyPrompt(document.querySelector('.copy-btn'))">
+                            Copy Prompt
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <rect x="5" y="5" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                                <path d="M3 11V3H11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Clone Option -->
+                <div class="option-card clone animate-in delay-3">
+                    <div class="option-badge">Quick Start</div>
+                    <h2>Clone the Repo</h2>
+                    <p>Get the complete system instantly. All commands, skills, and file structure ready to go.</p>
+
+                    <div class="time-estimate">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M8 5V8L10 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                        ~1 minute
+                    </div>
+
+                    <div class="steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Clone the repository</h4>
+                                <p>Run the command below in your terminal</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Rename example files</h4>
+                                <p>Copy .example.md files to .md</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Run /standup</h4>
+                                <p>Start your first daily planning session</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">
+                            <span class="code-lang">Terminal</span>
+                            <button class="copy-btn" onclick="copyCode(this, 'clone-code')">Copy</button>
+                        </div>
+                        <div class="code-body">
+                            <pre id="clone-code"><span class="code-comment"># Clone the repo</span>
+<span class="code-command">git clone</span> <span class="code-string">https://github.com/aviz85/claude-tasks.git</span>
+<span class="code-command">cd</span> claude-tasks
+
+<span class="code-comment"># Set up task files</span>
+<span class="code-command">cp</span> tasks/inbox.example.md tasks/inbox.md
+<span class="code-command">cp</span> tasks/today.example.md tasks/today.md
+<span class="code-command">cp</span> tasks/backlog.example.md tasks/backlog.md
+<span class="code-command">cp</span> tasks/someday.example.md tasks/someday.md
+
+<span class="code-comment"># Start using!</span>
+<span class="code-command">claude</span> /standup</pre>
+                        </div>
+                    </div>
+
+                    <div class="file-tree">
+                        <div class="file-tree-item folder">claude-tasks/</div>
+                        <div class="file-tree-item folder">├── .claude/</div>
+                        <div class="file-tree-item file">│   ├── commands/ <span class="desc">— /add, /done, /standup...</span></div>
+                        <div class="file-tree-item file">│   ├── skills/ <span class="desc">— parsing, prioritization</span></div>
+                        <div class="file-tree-item file">│   └── agents/ <span class="desc">— daily-standup, reviewer</span></div>
+                        <div class="file-tree-item folder">├── tasks/</div>
+                        <div class="file-tree-item file">│   ├── inbox.example.md</div>
+                        <div class="file-tree-item file">│   ├── today.example.md</div>
+                        <div class="file-tree-item file">│   └── ...</div>
+                        <div class="file-tree-item file">└── CLAUDE.md <span class="desc">— instructions</span></div>
+                    </div>
+
+                    <div class="btn-group">
+                        <a href="https://github.com/aviz85/claude-tasks" class="btn btn-primary" target="_blank">
+                            View on GitHub
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M4 12L12 4M12 4H6M12 4V10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-text">
+                    Built with <a href="https://claude.ai/code" target="_blank">Claude Code</a>
+                </div>
+                <div class="footer-links">
+                    <a href="index.html">Home</a>
+                    <a href="https://github.com/aviz85/claude-tasks" target="_blank">GitHub</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function copyPrompt(btn) {
+            const prompt = document.getElementById('diy-prompt').textContent;
+            navigator.clipboard.writeText(prompt).then(() => {
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = 'Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        function copyCode(btn, id) {
+            const code = document.getElementById(id).textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = 'Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Intersection Observer for animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.option-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
