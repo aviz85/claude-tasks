@@ -1,0 +1,19 @@
+# Personal task data - DO NOT COMMIT
+tasks/inbox.md
+tasks/today.md
+tasks/backlog.md
+tasks/someday.md
+tasks/archive/
+
+# Project-specific tasks
+projects/*/tasks.md
+
+# Logs contain personal activity
+logs/
+
+# Keep example files for public sharing
+!tasks/*.example.md
+!projects/*/*.example.md
+
+# OS files
+.DS_Store

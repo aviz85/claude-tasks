@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Tasks - GTD-Powered Task Management</title>
+    <style>
+        :root {
+            --bg: #0d1117;
+            --surface: #161b22;
+            --border: #30363d;
+            --text: #c9d1d9;
+            --text-muted: #8b949e;
+            --accent: #58a6ff;
+            --success: #3fb950;
+            --warning: #d29922;
+            --danger: #f85149;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Hero */
+        .hero {
+            padding: 80px 0;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--accent), #a371f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 32px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 24px;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        /* Features */
+        .features {
+            padding: 80px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .feature {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .feature h3 {
+            color: var(--accent);
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .feature p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Demo Section */
+        .demo {
+            padding: 80px 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .demo h2 {
+            text-align: center;
+            margin-bottom: 48px;
+            font-size: 2rem;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 24px;
+        }
+
+        .demo-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .demo-card-header {
+            background: var(--bg);
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .demo-card-content {
+            padding: 16px;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 0.8rem;
+        }
+
+        .task {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .task:last-child {
+            border-bottom: none;
+        }
+
+        .checkbox {
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .checkbox.done {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .task-text {
+            flex: 1;
+        }
+
+        .task.done .task-text {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            margin-left: 4px;
+        }
+
+        .tag.project { background: #1f6feb33; color: #58a6ff; }
+        .tag.priority-high { background: #f8514933; color: #f85149; }
+        .tag.priority-medium { background: #d2992233; color: #d29922; }
+        .tag.time { background: #3fb95033; color: #3fb950; }
+
+        /* Commands */
+        .commands {
+            padding: 80px 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .commands h2 {
+            text-align: center;
+            margin-bottom: 48px;
+            font-size: 2rem;
+        }
+
+        .command-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .command {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .command code {
+            color: var(--accent);
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 0.9rem;
+        }
+
+        .command p {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-top: 4px;
+        }
+
+        /* GTD Section */
+        .gtd {
+            padding: 80px 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .gtd h2 {
+            text-align: center;
+            margin-bottom: 16px;
+            font-size: 2rem;
+        }
+
+        .gtd > p {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 48px;
+        }
+
+        .matrix {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .matrix-cell {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .matrix-cell h4 {
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+        }
+
+        .matrix-cell p {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .matrix-cell.q1 { border-color: var(--danger); }
+        .matrix-cell.q1 h4 { color: var(--danger); }
+        .matrix-cell.q2 { border-color: var(--accent); }
+        .matrix-cell.q2 h4 { color: var(--accent); }
+        .matrix-cell.q3 { border-color: var(--warning); }
+        .matrix-cell.q3 h4 { color: var(--warning); }
+        .matrix-cell.q4 { border-color: var(--text-muted); }
+        .matrix-cell.q4 h4 { color: var(--text-muted); }
+
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <div class="container">
+            <h1>Claude Tasks</h1>
+            <p>A GTD-based personal task management system powered by Claude Code. Capture, clarify, organize, and execute with AI assistance.</p>
+            <span class="badge">Built with Claude Code Skills, Commands & Agents</span>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container" style="display: contents;">
+            <div class="feature">
+                <h3>/add - Instant Capture</h3>
+                <p>Brain dump anything. Natural language parsing extracts priority, time estimates, projects, and tags automatically.</p>
+            </div>
+            <div class="feature">
+                <h3>/standup - Daily Planning</h3>
+                <p>Start each day with clarity. Review yesterday, process inbox, select your top 3 focus tasks.</p>
+            </div>
+            <div class="feature">
+                <h3>/focus - Deep Work Mode</h3>
+                <p>Single-task focus sessions. New ideas go to inbox. Stay in the zone.</p>
+            </div>
+            <div class="feature">
+                <h3>/review - Weekly Retrospective</h3>
+                <p>Friday ritual. Analyze patterns, clean up stale tasks, plan next week's priorities.</p>
+            </div>
+            <div class="feature">
+                <h3>Eisenhower Matrix</h3>
+                <p>Automatic prioritization using urgent/important quadrants. Never wonder what to work on next.</p>
+            </div>
+            <div class="feature">
+                <h3>Smart Estimation</h3>
+                <p>AI-powered time estimates based on task type and complexity. Plan realistic days.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="demo">
+        <div class="container">
+            <h2>See it in action</h2>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <div class="demo-card-header">today.md</div>
+                    <div class="demo-card-content">
+                        <div class="task">
+                            <div class="checkbox"></div>
+                            <div class="task-text">
+                                Review API design docs
+                                <span class="tag project">@backend</span>
+                                <span class="tag priority-high">!high</span>
+                                <span class="tag time">~1h</span>
+                            </div>
+                        </div>
+                        <div class="task">
+                            <div class="checkbox"></div>
+                            <div class="task-text">
+                                Fix authentication bug
+                                <span class="tag project">@auth</span>
+                                <span class="tag priority-high">!high</span>
+                                <span class="tag time">~2h</span>
+                            </div>
+                        </div>
+                        <div class="task">
+                            <div class="checkbox"></div>
+                            <div class="task-text">
+                                Team sync call
+                                <span class="tag priority-medium">!medium</span>
+                                <span class="tag time">~30m</span>
+                            </div>
+                        </div>
+                        <div class="task done">
+                            <div class="checkbox done"></div>
+                            <div class="task-text">
+                                Deploy staging updates
+                                <span class="tag project">@infra</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="demo-card">
+                    <div class="demo-card-header">Terminal</div>
+                    <div class="demo-card-content" style="color: var(--text-muted);">
+                        <div style="margin-bottom: 12px;">
+                            <span style="color: var(--success);">$</span> /add urgent: fix login timeout issue
+                        </div>
+                        <div style="color: var(--text); margin-bottom: 12px;">
+                            Added to inbox:<br>
+                            <span style="color: var(--accent);">- [ ] Fix login timeout issue @work #bug !high ~1h</span>
+                        </div>
+                        <div style="margin-bottom: 12px;">
+                            <span style="color: var(--success);">$</span> /done deploy staging
+                        </div>
+                        <div style="color: var(--text);">
+                            Marked complete: Deploy staging updates<br>
+                            <span style="color: var(--text-muted);">3 tasks remaining today.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="commands">
+        <div class="container">
+            <h2>Commands</h2>
+            <div class="command-grid">
+                <div class="command">
+                    <code>/add &lt;task&gt;</code>
+                    <p>Quick add to inbox</p>
+                </div>
+                <div class="command">
+                    <code>/today</code>
+                    <p>Show today's tasks</p>
+                </div>
+                <div class="command">
+                    <code>/done &lt;task&gt;</code>
+                    <p>Mark task complete</p>
+                </div>
+                <div class="command">
+                    <code>/standup</code>
+                    <p>Daily planning</p>
+                </div>
+                <div class="command">
+                    <code>/review</code>
+                    <p>Weekly retrospective</p>
+                </div>
+                <div class="command">
+                    <code>/prioritize</code>
+                    <p>Re-prioritize tasks</p>
+                </div>
+                <div class="command">
+                    <code>/focus [time]</code>
+                    <p>Deep work mode</p>
+                </div>
+                <div class="command">
+                    <code>/inbox</code>
+                    <p>Process inbox</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="gtd">
+        <div class="container">
+            <h2>Eisenhower Matrix</h2>
+            <p>Automatic prioritization based on urgency and importance</p>
+            <div class="matrix">
+                <div class="matrix-cell q1">
+                    <h4>Q1: Do First</h4>
+                    <p>Urgent + Important<br>!high priority</p>
+                </div>
+                <div class="matrix-cell q2">
+                    <h4>Q2: Schedule</h4>
+                    <p>Important, Not Urgent<br>!medium priority</p>
+                </div>
+                <div class="matrix-cell q3">
+                    <h4>Q3: Delegate</h4>
+                    <p>Urgent, Not Important<br>!low priority</p>
+                </div>
+                <div class="matrix-cell q4">
+                    <h4>Q4: Eliminate</h4>
+                    <p>Not Urgent, Not Important<br>Consider removing</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>Built with <a href="https://claude.ai/code" target="_blank">Claude Code</a> - Skills, Commands & Sub-Agents</p>
+        </div>
+    </footer>
+</body>
+</html>
