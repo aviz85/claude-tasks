@@ -2,10 +2,20 @@
 
 A GTD-based personal task management system powered by Claude Code.
 
-## Quick Start
+## Installation
 
 ```bash
-cd /Users/aviz/tasks
+# Clone the repository
+git clone https://github.com/aviz85/claude-tasks.git
+cd claude-tasks
+
+# Create your personal task files (gitignored)
+cp tasks/inbox.example.md tasks/inbox.md
+cp tasks/today.example.md tasks/today.md
+cp tasks/backlog.example.md tasks/backlog.md
+cp tasks/someday.example.md tasks/someday.md
+
+# Start Claude Code
 claude
 ```
 
