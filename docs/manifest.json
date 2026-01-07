@@ -1,0 +1,35 @@
+{
+  "name": "Claude Tasks - GTD",
+  "short_name": "Tasks",
+  "description": "Personal GTD task management powered by Claude",
+  "start_url": "/app.html",
+  "display": "standalone",
+  "background_color": "#08080a",
+  "theme_color": "#f59e0b",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Add Task",
+      "short_name": "Add",
+      "description": "Quickly add a new task",
+      "url": "/app.html?action=add",
+      "icons": [{ "src": "icon.svg", "sizes": "192x192", "type": "image/svg+xml" }]
+    },
+    {
+      "name": "Today's Tasks",
+      "short_name": "Today",
+      "description": "View today's focus tasks",
+      "url": "/app.html?view=today",
+      "icons": [{ "src": "icon.svg", "sizes": "192x192", "type": "image/svg+xml" }]
+    }
+  ]
+}
