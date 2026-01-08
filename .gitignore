@@ -15,5 +15,24 @@ logs/
 !tasks/*.example.md
 !projects/*/*.example.md
 
+# Integrations - contain credentials and API keys
+integrations/
+
+# Obsidian - personal editor settings
+.obsidian/
+
+# Claude Code - ignore sensitive, allow skills
+.claude/projects/
+.claude/settings.local.json
+.claude/skills/*/scripts/.env
+.claude/skills/*/scripts/.env.*
+
+# Environment & secrets
+.env
+.env.*
+.env.local
+.env.*.local
+
 # OS files
 .DS_Store
+Thumbs.db
