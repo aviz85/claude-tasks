@@ -1,7 +1,7 @@
 ---
 description: Daily standup - review yesterday, plan today
-allowed-tools: Read, Edit, Glob
-skills: priority-matrix, time-estimation
+allowed-tools: Read, Edit, Glob, Grep
+skills: priority-matrix, time-estimation, memo
 ---
 
 # Daily Standup
@@ -12,6 +12,11 @@ skills: priority-matrix, time-estimation
 - Current today.md: !`cat tasks/today.md 2>/dev/null`
 - Inbox items: !`cat tasks/inbox.md 2>/dev/null`
 - Backlog priorities: !`head -30 tasks/backlog.md 2>/dev/null`
+
+## Personal Patterns (from memo)
+Before planning, search `data/memo.md` for relevant patterns:
+- Search: `#timing` `#habit` `@standup` `@morning`
+- Apply insights to today's planning (e.g., buffer time for breaks, parallel dev work)
 
 ## Standup Flow
 
