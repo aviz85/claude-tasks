@@ -2,8 +2,10 @@
 
 Quick recovery when energy drops. Based on GTD energy management principles.
 
+## First: Check the Clock
+Current time: !`date "+%Y-%m-%d %H:%M:%S %Z"`
+
 ## Context
-- Current time: [check with date command]
 - Today's tasks: $tasks/today.md
 - Backlog (for low-energy options): $tasks/backlog.md
 - Energy patterns: Search `data/memo.md` for `#energy` `#blocker` - what helped before?

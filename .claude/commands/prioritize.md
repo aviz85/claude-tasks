@@ -6,6 +6,9 @@ skills: priority-matrix
 
 # Reprioritize Tasks
 
+## First: Check the Clock
+Current time: !`date "+%Y-%m-%d %H:%M:%S %Z"`
+
 ## Context
 - Inbox: !`cat tasks/inbox.md 2>/dev/null`
 - Today: !`cat tasks/today.md 2>/dev/null`

@@ -2,6 +2,12 @@
 
 Record and retrieve observations about user's work patterns, habits, and preferences.
 
+## First: Check the Clock
+
+Before recording or recalling, run: `date "+%Y-%m-%d %H:%M:%S %Z"`
+
+Time context is essential for memos - patterns are time-sensitive.
+
 ## Purpose
 Make Claude more personal and adapted to aviz's work style by:
 - Recording patterns as they emerge

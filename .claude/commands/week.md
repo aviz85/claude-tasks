@@ -5,6 +5,9 @@ allowed-tools: Read, Glob
 
 # Week Overview
 
+## First: Check the Clock
+Current time: !`date "+%Y-%m-%d %H:%M:%S %Z"`
+
 ## Context
 - Today: !`date +%Y-%m-%d`
 - Day of week: !`date +%A`

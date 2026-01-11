@@ -6,6 +6,14 @@ skills: priority-matrix, time-estimation, memo
 
 # Daily Standup
 
+## First: Check the Clock
+Current time: !`date "+%Y-%m-%d %H:%M:%S %Z"`
+
+Use this to determine:
+- Morning/afternoon/evening context
+- Hours available for work today
+- Whether "today" tasks are still relevant
+
 ## Context
 - Today: !`date +%Y-%m-%d`
 - Yesterday's log: !`cat logs/daily/$(date -v-1d +%Y-%m-%d).md 2>/dev/null || echo "No log from yesterday"`

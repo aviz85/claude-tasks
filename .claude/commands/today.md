@@ -5,6 +5,9 @@ allowed-tools: Read
 
 # Today's Tasks
 
+## First: Check the Clock
+Current time: !`date "+%Y-%m-%d %H:%M:%S %Z"`
+
 ## Context
 - Current date: !`date +%Y-%m-%d`
 - Today file: !`cat tasks/today.md 2>/dev/null || echo "No tasks for today yet"`

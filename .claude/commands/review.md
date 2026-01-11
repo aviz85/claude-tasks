@@ -6,6 +6,9 @@ skills: priority-matrix, time-estimation
 
 # Weekly Review
 
+## First: Check the Clock
+Current time: !`date "+%Y-%m-%d %H:%M:%S %Z"`
+
 ## Context
 - Today: !`date +%Y-%m-%d`
 - This week's archive: !`ls tasks/archive/ 2>/dev/null | tail -7`

@@ -6,6 +6,9 @@ allowed-tools: Read
 
 # Focus Mode
 
+## First: Check the Clock
+Current time: !`date "+%Y-%m-%d %H:%M:%S %Z"`
+
 Starting focus session: $ARGUMENTS
 
 ## Context

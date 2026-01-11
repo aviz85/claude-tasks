@@ -31,6 +31,18 @@ Observations about work patterns, habits, preferences, and what works.
 **Observation:** User asked about energy drops - proactively wants strategies before they happen.
 **Insight:** User is self-aware about energy management. Created /boost command for this.
 
+### 2026-01-09 03:05 #success #preference @development
+**Observation:** User described the iterative building process as "feels magic" - the real-time conversation-driven development resonates deeply.
+**Insight:** When marketing Agentic Apps, lead with the emotional experience of watching the system grow during conversation. This is the differentiator that excites people.
+
+### 2026-01-09 02:42 #success #pattern @development @night
+**Observation:** Spent 1+ hour shipping features (memo system, scheduled-task skill) instead of following dev schedule. User stayed engaged, didn't mention the time slip.
+**Insight:** When in flow on tooling/infrastructure, user prioritizes shipping over strict schedule. Feature completion > time adherence.
+
+### 2026-01-09 02:40 #preference #habit
+**Observation:** User requested /memo with no params - wants quick trigger that "just knows" what to record.
+**Insight:** User values intelligent defaults over explicit input. Design commands to guess intent when obvious.
+
 ---
 
 <!-- New entries go here, newest first -->
