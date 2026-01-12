@@ -43,6 +43,26 @@ Observations about work patterns, habits, preferences, and what works.
 **Observation:** User requested /memo with no params - wants quick trigger that "just knows" what to record.
 **Insight:** User values intelligent defaults over explicit input. Design commands to guess intent when obvious.
 
+### 2026-01-11 17:47 #preference @252events
+**Observation:** "Coupla" = 252events (synonym/nickname for the project)
+**Insight:** Use both names interchangeably. User may refer to it as either.
+
+### 2026-01-11 17:28 #pattern #habit @planning
+**Observation:** User naturally structures work in "sandwich" pattern: Code → Content → Code. Today: Cardcom → Record Chapter 4 → Dreemz. This mirrors Friday night pattern too.
+**Insight:** This isn't random - content creation (recording) needs mental reset. Sandwiching it between code sessions uses coding as "warm-up" and "cool-down". When planning sessions, suggest this rhythm: start with code, peak with content, end with code.
+
+### 2026-01-11 12:10 #success @shomron-video
+**Observation:** Shomron/Nachala AI video meeting happened Saturday night. Went okay, follow-up meeting scheduled.
+**Insight:** Client relationship progressing. Keep tracking follow-up date when known.
+
 ---
+
+### 2026-01-12 04:10 #pattern #blocker #energy @night
+**Observation:** User identified own cycle: stress → overwork to "fix" → worse sleep → more stress. Self-aware but struggling to break the pattern.
+**Insight:** IMPORTANT: When aviz is stressed, do NOT encourage more work. Overwork is a stress response, not a solution. On hard days: fewer tasks, lower bar, celebrate small wins. The instinct to "do more" should be gently redirected.
+
+### 2026-01-12 04:05 #timing #habit #blocker @night
+**Observation:** Going to sleep at 4am. User expressed difficulty maintaining good framework/routine. Anticipates hard day ahead.
+**Insight:** Late nights are comfortable (memo from 01-09), but consistent very-late sleep (4am+) may be creating next-day friction. When user mentions "hard day coming" - don't plan heavy morning. First standup should be gentle, framework-light.
 
 <!-- New entries go here, newest first -->
